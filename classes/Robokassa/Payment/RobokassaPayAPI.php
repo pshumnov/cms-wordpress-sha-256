@@ -69,7 +69,7 @@ class RobokassaPayAPI {
      * @param string $pass2
      * @param string $method
      */
-    public function __construct($login, $pass1, $pass2, $method = 'md5') {
+    public function __construct($login, $pass1, $pass2, $method = 'sha256') {
         $this->mrh_login = $login;
         $this->mrh_pass1 = $pass1;
         $this->mrh_pass2 = $pass2;
@@ -139,7 +139,7 @@ class RobokassaPayAPI {
      *
      * @throws \Exception
      */
-    public function getSignature($string, $method = 'md5') {
+    public function getSignature($string, $method = 'sha256') {
         if (in_array($method, array('md5', 'ripemd160', 'sha1', 'sha256', 'sha384', 'sha512'))) {
             return strtoupper(hash($method, $string));
         }
@@ -456,7 +456,7 @@ class RobokassaPayAPI {
         $result = $this->sendRequest('OpState', array(
             'MerchantLogin' => $this->mrh_login,
             'InvoiceID' => $invId,
-            'Signature' => strtoupper(md5("$this->mrh_login:$invId:$this->mrh_pass2")),
+            'Signature' => strtoupper(hash('sha256', "$this->mrh_login:$invId:$this->mrh_pass2")),
         ));
 
         return ($result['Result']['Code'] == '0');
@@ -472,7 +472,7 @@ class RobokassaPayAPI {
             'InvoiceID'         => $invoiceId,
             'PreviousInvoiceID' => $parentInvoiceId,
             'Description'       => '',
-            'SignatureValue'    => md5("{$this->mrh_login}:{$amount}:{$invoiceId}:{$receiptJson}:{$this->mrh_pass1}:shp_label=official_wordpress:Shp_merchant_id=" . get_option('robokassa_payment_MerchantLogin') . ":Shp_order_id={$invoiceId}:Shp_result_url=" . site_url('/?robokassa=result')),
+            'SignatureValue'    => hash('sha256', "{$this->mrh_login}:{$amount}:{$invoiceId}:{$receiptJson}:{$this->mrh_pass1}:shp_label=official_wordpress:Shp_merchant_id=" . get_option('robokassa_payment_MerchantLogin') . ":Shp_order_id={$invoiceId}:Shp_result_url=" . site_url('/?robokassa=result')),
             'OutSum'            => $amount,
             'shp_label'         => 'official_wordpress',
             'Shp_merchant_id'   => get_option('robokassa_payment_MerchantLogin'),

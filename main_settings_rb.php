@@ -109,7 +109,7 @@ if (!\current_user_can('activate_plugins')) {
         </table>
 
         <p>Метод отсылки данных <code>POST</code></p>
-        <p>Алгоритм расчета хеша<code>MD5</code></p>
+        <p>Алгоритм расчета хеша<code>SHA256</code></p>
         <p><b>3) После введите логин и пароли магазина в соответсвующие поля ниже</b></p>
         <p class="big_title_rb">Основные настройки</p>
 

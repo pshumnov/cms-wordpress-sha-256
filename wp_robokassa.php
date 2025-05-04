@@ -265,7 +265,7 @@ function robokassa_payment_wp_robokassa_checkPayment()
 
             /** @var string $crc_confirm */
             $crc_confirm = strtoupper(
-                md5(
+                hash('sha256',
                     implode(
                         ':',
                         [
@@ -857,7 +857,7 @@ function robokassa_2check_send($order_id, $old_status, $new_status)
         /** @var string $sign */
         $sign = formatSignFinish(
             base64_encode(
-                md5(
+                hash('sha256',
                     $startupHash .
                     ($pass1)
                 )
@@ -964,7 +964,7 @@ function robokassa_hold_confirm($order_id, $old_status, $new_status, $order) {
         $merchant_login = get_option('robokassa_payment_MerchantLogin');
         $password1 = get_option('robokassa_payment_shoppass1');
 
-        $signature_value = md5("{$merchant_login}:{$request_data['OutSum']}:{$request_data['InvoiceID']}:{$request_data['Receipt']}:{$password1}");
+        $signature_value = hash('sha256', "{$merchant_login}:{$request_data['OutSum']}:{$request_data['InvoiceID']}:{$request_data['Receipt']}:{$password1}");
         $request_data['SignatureValue'] = $signature_value;
 
         $response = wp_remote_post('https://auth.robokassa.ru/Merchant/Payment/Confirm', array(
@@ -990,7 +990,7 @@ function robokassa_hold_cancel($order_id, $old_status, $new_status, $order)
         $merchant_login = get_option('robokassa_payment_MerchantLogin');
         $password1 = get_option('robokassa_payment_shoppass1');
 
-        $signature_value = md5("{$merchant_login}::{$request_data['InvoiceID']}:{$password1}");
+        $signature_value = hash('sha256', "{$merchant_login}::{$request_data['InvoiceID']}:{$password1}");
         $request_data['SignatureValue'] = $signature_value;
 
         $response = wp_remote_post('https://auth.robokassa.ru/Merchant/Payment/Cancel', array(
@@ -1022,7 +1022,7 @@ function robokassa_hold_cancel_after5($order_id)
             $merchant_login = get_option('robokassa_payment_MerchantLogin');
             $password1 = get_option('robokassa_payment_shoppass1');
 
-            $signature_value = md5("{$merchant_login}::{$request_data['InvoiceID']}:{$password1}");
+            $signature_value = hash('sha256', "{$merchant_login}::{$request_data['InvoiceID']}:{$password1}");
             $request_data['SignatureValue'] = $signature_value;
 
             $response = wp_remote_post('https://auth.robokassa.ru/Merchant/Payment/Cancel', array(

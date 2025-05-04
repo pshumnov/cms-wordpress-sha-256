@@ -30,7 +30,7 @@
 ### Настройка модуля
 
 Настройка магазина на стороне [Робокассы](http://partner.robokassa.ru/):
-1. Алгоритм расчета хеша – MD5
+1. Алгоритм расчета хеша – SHA256
 2. Result Url – http(s)://your-domain.ru/?robokassa=result
 3. Success Url – http(s)://your-domain.ru/?robokassa=success
 4. Fail Url – http(s)://your-domain.ru/?robokassa=fail
